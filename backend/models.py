@@ -28,4 +28,6 @@ class BillData(BaseModel):
     avg_daily_usage_kwh: float
     avg_daily_cost_dollars: float
     controlled_load_rate_cents: Optional[float] = None
+    controlled_load_2_kwh: Optional[float] = None
+    daily_supply_controlled_cents: Optional[float] = None
     uploaded_at: Optional[str] = None

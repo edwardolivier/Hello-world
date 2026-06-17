@@ -26,7 +26,9 @@ Return this exact JSON structure:
   "offpeak_rate_cents": null,
   "shoulder_rate_cents": null,
   "controlled_load_rate_cents": null,
+  "controlled_load_2_kwh": null,
   "daily_supply_charge_cents": 100.00,
+  "daily_supply_controlled_cents": null,
   "total_amount_dollars": 150.00,
   "avg_daily_usage_kwh": 12.5,
   "avg_daily_cost_dollars": 5.50
@@ -35,6 +37,8 @@ Return this exact JSON structure:
 Notes:
 - Rates should be in cents per kWh
 - Daily supply charge in cents per day
+- controlled_load_2_kwh: total kWh used on Controlled Load 2 tariff (hot water etc), null if not present
+- daily_supply_controlled_cents: daily supply charge for controlled load circuit in cents per day, null if not present
 - If avg daily values aren't on the bill, calculate them from the billing period
 - For flat rate tariffs, put the single rate in peak_rate_cents
 
