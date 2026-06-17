@@ -1,8 +1,10 @@
 # Stage 1: Build React frontend
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
+# Copy dependency files first so npm install is cached unless they change
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+# Copy source and build
 COPY frontend/ ./
 RUN npm run build
 
@@ -15,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpoppler-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements first so pip install is cached unless they change
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 

@@ -1,8 +1,15 @@
 steps:
-  # Build the Docker image
+  # Pull latest image to use as cache
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/energy-tracker:latest || true']
+
+  # Build the Docker image using cache from latest
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
+      - '--cache-from'
+      - 'gcr.io/$PROJECT_ID/energy-tracker:latest'
       - '-t'
       - 'gcr.io/$PROJECT_ID/energy-tracker:$COMMIT_SHA'
       - '-t'
