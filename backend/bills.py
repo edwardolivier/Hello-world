@@ -99,13 +99,15 @@ async def upload_bill(
 @router.get("/", response_model=list[BillData])
 async def list_bills(current_user: str = Depends(get_current_user)):
     docs = db.collection("users").document(current_user)\
-             .collection("bills").order_by("billing_period_start", direction="DESCENDING").stream()
+             .collection("bills").stream()
 
     bills = []
     for doc in docs:
         data = doc.to_dict()
         data["id"] = doc.id
         bills.append(BillData(**data))
+
+    bills.sort(key=lambda b: b.billing_period_start, reverse=True)
     return bills
 
 @router.delete("/{bill_id}")
@@ -120,13 +122,13 @@ async def delete_bill(bill_id: str, current_user: str = Depends(get_current_user
 async def get_stats(current_user: str = Depends(get_current_user)):
     docs = list(
         db.collection("users").document(current_user)
-          .collection("bills").order_by("billing_period_start").stream()
+          .collection("bills").stream()
     )
 
     if not docs:
         return {"bills_count": 0, "monthly_data": [], "averages": {}}
 
-    bills = [doc.to_dict() for doc in docs]
+    bills = sorted([doc.to_dict() for doc in docs], key=lambda b: b.get("billing_period_start", ""))
 
     total_kwh = sum(b.get("total_kwh", 0) for b in bills)
     total_spent = sum(b.get("total_amount_dollars", 0) for b in bills)

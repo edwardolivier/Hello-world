@@ -12,6 +12,7 @@ security = HTTPBearer()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-this-in-production")
+REGISTRATION_SECRET = os.getenv("REGISTRATION_SECRET", "")
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_DAYS = 7
 
@@ -33,6 +34,9 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 async def register(user: UserRegister):
     if len(user.username) < 3 or len(user.password) < 6:
         raise HTTPException(status_code=400, detail="Username min 3 chars, password min 6 chars")
+
+    if not REGISTRATION_SECRET or user.secret_word.lower() != REGISTRATION_SECRET.lower():
+        raise HTTPException(status_code=403, detail="Invalid secret word")
 
     user_ref = db.collection("users").document(user.username)
     if user_ref.get().exists:

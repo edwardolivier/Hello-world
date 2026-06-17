@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api'
 
 export default function Register() {
-  const [form, setForm] = useState({ username: '', password: '', confirm: '' })
+  const [form, setForm] = useState({ username: '', password: '', confirm: '', secret_word: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -17,7 +17,7 @@ export default function Register() {
     }
     setLoading(true)
     try {
-      const res = await authApi.register({ username: form.username, password: form.password })
+      const res = await authApi.register({ username: form.username, password: form.password, secret_word: form.secret_word })
       localStorage.setItem('token', res.data.access_token)
       localStorage.setItem('username', form.username)
       navigate('/')
@@ -73,6 +73,18 @@ export default function Register() {
                 placeholder="repeat password"
                 value={form.confirm}
                 onChange={e => setForm({ ...form, confirm: e.target.value })}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-slate-400 mb-1">Secret Word</label>
+              <input
+                type="password"
+                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                placeholder="enter secret word"
+                value={form.secret_word}
+                onChange={e => setForm({ ...form, secret_word: e.target.value })}
                 required
               />
             </div>

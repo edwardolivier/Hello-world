@@ -33,7 +33,7 @@ steps:
       - '--memory'
       - '512Mi'
       - '--set-secrets'
-      - 'ANTHROPIC_API_KEY=anthropic-api-key:latest,JWT_SECRET_KEY=jwt-secret-key:latest'
+      - 'ANTHROPIC_API_KEY=anthropic-api-key:latest,JWT_SECRET_KEY=jwt-secret-key:latest,REGISTRATION_SECRET=registration-secret:latest'
 
 images:
   - 'gcr.io/$PROJECT_ID/energy-tracker'
